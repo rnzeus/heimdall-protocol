@@ -1,7 +1,6 @@
 import { z } from "zod";
-import { EventTypeSchema } from "../shared";
 
-export const NetworkTransportSchema = z.enum(["fetch", "axios"]);
+export const NetworkTransportSchema = z.enum(["xhr"]);
 export type NetworkTransport = z.infer<typeof NetworkTransportSchema>;
 
 export const NetworkEventPayloadSchema = z
