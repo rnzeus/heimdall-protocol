@@ -20,13 +20,20 @@ export const NetworkEventPayloadSchema = z
     durationMs: z.number(),
     error: z.string().optional(),
 
+    // request
     requestHeaders: z.record(z.string(), z.string()),
-    responseHeaders: z.record(z.string(), z.string()),
     requestBodySnippet: z.string().optional(),
-    responseBodySnippet: z.string().optional(),
+    requestBodySnippetBytes: z.number().optional(),
+    requestBodyTruncated: z.boolean().optional(),
     requestBodySize: z.number().optional(),
-    responseBodySize: z.number().optional(),
     requestContentType: z.string().optional(),
+
+    // response
+    responseHeaders: z.record(z.string(), z.string()),
+    responseBodySnippet: z.string().optional(),
+    responseBodySnippetBytes: z.number().optional(),
+    responseBodyTruncated: z.boolean().optional(),
+    responseBodySize: z.number().optional(),
     responseContentType: z.string().optional(),
   })
   .strict();
