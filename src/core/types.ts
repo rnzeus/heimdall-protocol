@@ -2,6 +2,7 @@ import { z } from "zod";
 import { NetworkEventPayloadSchema } from "../network";
 import { ZustandEventPayloadSchema } from "../zustand";
 import { WireMessageKindSchema } from "../shared";
+import { WsEventPayloadSchema } from "../websocket";
 
 export const WireMessageBaseSchema = z
   .object({
@@ -34,6 +35,7 @@ export type HelloWireMessageV1 = z.infer<typeof HelloWireMessageV1Schema>;
 export const EventWirePayloadSchema = z.union([
   NetworkEventPayloadSchema,
   ZustandEventPayloadSchema,
+  WsEventPayloadSchema,
 ]);
 
 export type EventWirePayload = z.infer<typeof EventWirePayloadSchema>;
