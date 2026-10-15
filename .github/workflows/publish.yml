@@ -19,7 +19,7 @@ jobs:
           node-version: 22.14.0
           registry-url: https://registry.npmjs.org
           cache: yarn
-      - run: npm install -g npm@latest
+      - run: npm install -g npm@11
       - name: Check that the tag matches the package version
         run: test "v$(node -p "require('./package.json').version")" = "$GITHUB_REF_NAME"
       - run: yarn install --immutable
