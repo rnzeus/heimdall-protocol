@@ -1,6 +1,27 @@
 {
   "name": "@rnzeus/heimdall-protocol",
   "version": "0.2.0",
+  "description": "Wire protocol of Heimdall — Zod schemas and types for messages between the SDK and the desktop app",
+  "license": "MIT",
+  "author": "Volodymyr Dudkevych",
+  "homepage": "https://heimdall.rnzeus.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rnzeus/heimdall-protocol.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rnzeus/heimdall-protocol/issues"
+  },
+  "keywords": [
+    "heimdall",
+    "protocol",
+    "zod",
+    "react-native",
+    "devtools"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
