@@ -44,12 +44,25 @@ export const HelloDeviceInfoSchema = z
 
 export type HelloDeviceInfo = z.infer<typeof HelloDeviceInfoSchema>;
 
+/**
+ * Session credentials. Sent only when the SDK got them from the cloud together with the host
+ * certificate: a host that issues them understands this field and answers with `helloAck`.
+ */
+export const HelloAuthSchema = z
+  .object({
+    token: z.string(),
+  })
+  .strict();
+
+export type HelloAuth = z.infer<typeof HelloAuthSchema>;
+
 export const HelloWireMessageV1Schema = WireMessageBaseSchema.extend({
   kind: z.literal("hello"),
   v: z.literal(1),
   sdkVersion: z.string().optional(),
   app: HelloAppInfoSchema.optional(),
   device: HelloDeviceInfoSchema.optional(),
+  auth: HelloAuthSchema.optional(),
 });
 
 export type HelloWireMessageV1 = z.infer<typeof HelloWireMessageV1Schema>;

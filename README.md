@@ -19,6 +19,16 @@ Every message is one JSON object. There are two kinds:
 | `hello` | once, right after the connection is open | `HelloWireMessageV1Schema` |
 | `event` | for every captured event | `EventWireMessageV1Schema` |
 
+`hello` may carry `auth: { token }` — session credentials the SDK got from the cloud along with the host certificate. Only a host that issued them receives this field.
+
+The host answers `hello` with one message:
+
+| Kind | When | Schema |
+|---|---|---|
+| `helloAck` | once, after `hello`; `status` is `accepted` or `rejected` (`reason`: `auth`, `channel`, `version`) | `HelloAckWireMessageV1Schema` |
+
+Parse host messages with `safeParseHostWireMessageV1`.
+
 An `event` carries one of four payloads:
 
 | Payload | Schema |
@@ -45,7 +55,8 @@ if (result.success) {
 ## Compatibility
 
 - The protocol version is the `v` field, currently `1`.
-- Schemas are strict: a message with an unknown field is rejected.
+- SDK → host schemas are strict: a message with an unknown field is rejected.
+- Host → SDK schemas are tolerant: unknown fields are stripped, so an SDK accepts messages from a newer host.
 - Changes are additive only. A new field is released in the protocol first, then in the host, then in the SDK.
 
 ## License
