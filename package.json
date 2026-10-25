@@ -1,6 +1,6 @@
 {
   "name": "@rnzeus/heimdall-protocol",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Wire protocol of Heimdall — Zod schemas and types for messages between the SDK and the desktop app",
   "license": "MIT",
   "author": "Volodymyr Dudkevych",
