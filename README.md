@@ -29,14 +29,17 @@ The host answers `hello` with one message:
 
 Parse host messages with `safeParseHostWireMessageV1`.
 
-An `event` carries one of four payloads:
+An `event` carries one of five payloads:
 
 | Payload | Schema |
 |---|---|
-| Network request | `NetworkEventPayloadSchema` |
+| Network request sent | `NetworkStartEventPayloadSchema` |
+| Network request completed, failed or aborted | `NetworkEventPayloadSchema` |
 | WebSocket | `WsEventPayloadSchema` |
 | Zustand snapshot | `ZustandEventPayloadSchema` |
 | Console | `ConsoleEventPayloadSchema` |
+
+A request produces `networkStart` when it is sent and `network` when it ends; both carry the same `requestId`. A `networkStart` without a `network` means the request is still waiting for a response.
 
 ## Usage
 

@@ -3,30 +3,46 @@ import { z } from "zod";
 export const NetworkTransportSchema = z.enum(["xhr"]);
 export type NetworkTransport = z.infer<typeof NetworkTransportSchema>;
 
+/** What is known about a request once it is sent; shared by its start and its completion. */
+const requestShape = {
+  id: z.string(),
+  transport: NetworkTransportSchema,
+  /** the same for the start and the completion of one request */
+  requestId: z.string(),
+  tsStart: z.number(),
+  method: z.string(),
+  url: z.string(),
+  host: z.string(),
+  path: z.string(),
+  requestHeaders: z.record(z.string(), z.string()),
+  requestContentType: z.string().optional(),
+};
+
+/** A request was sent; `network` with the same `requestId` follows once it completes, fails or is aborted. */
+export const NetworkStartEventPayloadSchema = z
+  .object({
+    ...requestShape,
+    type: z.literal("networkStart"),
+  })
+  .strict();
+
+export type NetworkStartEventPayload = z.infer<typeof NetworkStartEventPayloadSchema>;
+
 export const NetworkEventPayloadSchema = z
   .object({
-    id: z.string(),
+    ...requestShape,
     type: z.literal("network"),
-    transport: NetworkTransportSchema,
-    requestId: z.string(),
-    tsStart: z.number(),
     tsEnd: z.number(),
-    method: z.string(),
-    url: z.string(),
-    host: z.string(),
-    path: z.string(),
     status: z.number().optional(),
     ok: z.boolean(),
     durationMs: z.number(),
     error: z.string().optional(),
 
     // request
-    requestHeaders: z.record(z.string(), z.string()),
     requestBodySnippet: z.string().optional(),
     requestBodySnippetBytes: z.number().optional(),
     requestBodyTruncated: z.boolean().optional(),
     requestBodySize: z.number().optional(),
-    requestContentType: z.string().optional(),
 
     // response
     responseHeaders: z.record(z.string(), z.string()),

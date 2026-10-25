@@ -46,3 +46,48 @@ describe("envelope", () => {
     expect(safeParseWireEnvelope(message).success).toBe(true);
   });
 });
+
+describe("network start", () => {
+  const start = {
+    id: "e1",
+    type: "networkStart",
+    transport: "xhr",
+    requestId: "r1",
+    tsStart: 1000,
+    method: "POST",
+    url: "https://api.example.com/cart",
+    host: "api.example.com",
+    path: "/cart",
+    requestHeaders: { "content-type": "application/json" },
+  };
+  const message = (event: object) => ({
+    kind: "event",
+    v: 1,
+    channel: hello.channel,
+    clientId: hello.clientId,
+    sessionId: hello.sessionId,
+    event,
+  });
+
+  it("accepts the start of a request", () => {
+    expect(safeParseWireMessageV1(message(start)).success).toBe(true);
+  });
+
+  it("rejects fields that only a completed request has", () => {
+    expect(safeParseWireMessageV1(message({ ...start, status: 200 })).success).toBe(false);
+  });
+
+  it("keeps accepting the completion with the same requestId", () => {
+    const completed = {
+      ...start,
+      id: "e2",
+      type: "network",
+      tsEnd: 1200,
+      status: 200,
+      ok: true,
+      durationMs: 200,
+      responseHeaders: {},
+    };
+    expect(safeParseWireMessageV1(message(completed)).success).toBe(true);
+  });
+});

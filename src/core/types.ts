@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { NetworkEventPayloadSchema } from "../network";
+import { NetworkEventPayloadSchema, NetworkStartEventPayloadSchema } from "../network";
 import { ZustandEventPayloadSchema } from "../zustand";
 import { WireMessageKindSchema } from "../shared";
 import { WsEventPayloadSchema } from "../websocket";
@@ -72,6 +72,7 @@ export type HelloWireMessageV1 = z.infer<typeof HelloWireMessageV1Schema>;
  */
 export const EventWirePayloadSchema = z.union([
   NetworkEventPayloadSchema,
+  NetworkStartEventPayloadSchema,
   ZustandEventPayloadSchema,
   WsEventPayloadSchema,
   ConsoleEventPayloadSchema,
