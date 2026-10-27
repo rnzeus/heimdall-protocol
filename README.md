@@ -58,8 +58,8 @@ if (result.success) {
 ## Compatibility
 
 - The protocol version is the `v` field, currently `1`.
-- SDK → host schemas are strict: a message with an unknown field is rejected.
-- Host → SDK schemas are tolerant: unknown fields are stripped, so an SDK accepts messages from a newer host.
+- Schemas are tolerant in both directions: unknown fields are stripped, so a host accepts messages from a newer SDK and an SDK accepts messages from a newer host. Required fields and their types are still checked.
+- An unknown `kind` or event `type` is rejected; `safeParseWireEnvelope` tells such a message apart from garbage.
 - Changes are additive only. A new field is released in the protocol first, then in the host, then in the SDK.
 
 ## License

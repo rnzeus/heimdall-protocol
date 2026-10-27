@@ -25,13 +25,9 @@ describe("hello", () => {
     expect(safeParseWireMessageV1({ ...hello, auth: {} }).success).toBe(false);
   });
 
-  it("rejects unknown fields in auth", () => {
-    const result = safeParseWireMessageV1({ ...hello, auth: { token: "secret", extra: 1 } });
-    expect(result.success).toBe(false);
-  });
-
-  it("rejects unknown top-level fields", () => {
-    expect(safeParseWireMessageV1({ ...hello, extra: 1 }).success).toBe(false);
+  it("strips fields from a newer SDK", () => {
+    const result = safeParseWireMessageV1({ ...hello, extra: 1, auth: { token: "secret", extra: 1 } });
+    expect(result.data).toEqual({ ...hello, auth: { token: "secret" } });
   });
 
   it("rejects other wire versions", () => {
@@ -41,7 +37,14 @@ describe("hello", () => {
 
 describe("envelope", () => {
   it("accepts a message the full schema rejects", () => {
-    const message = { ...hello, extra: 1 };
+    const message = {
+      kind: "event",
+      v: 1,
+      channel: hello.channel,
+      clientId: hello.clientId,
+      sessionId: hello.sessionId,
+      event: { id: "e1", type: "screen" },
+    };
     expect(safeParseWireMessageV1(message).success).toBe(false);
     expect(safeParseWireEnvelope(message).success).toBe(true);
   });
@@ -73,8 +76,9 @@ describe("network start", () => {
     expect(safeParseWireMessageV1(message(start)).success).toBe(true);
   });
 
-  it("rejects fields that only a completed request has", () => {
-    expect(safeParseWireMessageV1(message({ ...start, status: 200 })).success).toBe(false);
+  it("keeps a start a start when it carries fields of a completed request", () => {
+    const result = safeParseWireMessageV1(message({ ...start, status: 200 }));
+    expect(result.data).toEqual(message(start));
   });
 
   it("keeps accepting the completion with the same requestId", () => {

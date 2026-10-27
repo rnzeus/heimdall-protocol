@@ -19,40 +19,36 @@ const requestShape = {
 };
 
 /** A request was sent; `network` with the same `requestId` follows once it completes, fails or is aborted. */
-export const NetworkStartEventPayloadSchema = z
-  .object({
-    ...requestShape,
-    type: z.literal("networkStart"),
-  })
-  .strict();
+export const NetworkStartEventPayloadSchema = z.object({
+  ...requestShape,
+  type: z.literal("networkStart"),
+});
 
 export type NetworkStartEventPayload = z.infer<typeof NetworkStartEventPayloadSchema>;
 
-export const NetworkEventPayloadSchema = z
-  .object({
-    ...requestShape,
-    type: z.literal("network"),
-    tsEnd: z.number(),
-    status: z.number().optional(),
-    ok: z.boolean(),
-    durationMs: z.number(),
-    error: z.string().optional(),
+export const NetworkEventPayloadSchema = z.object({
+  ...requestShape,
+  type: z.literal("network"),
+  tsEnd: z.number(),
+  status: z.number().optional(),
+  ok: z.boolean(),
+  durationMs: z.number(),
+  error: z.string().optional(),
 
-    // request
-    requestBodySnippet: z.string().optional(),
-    requestBodySnippetBytes: z.number().optional(),
-    requestBodyTruncated: z.boolean().optional(),
-    requestBodySize: z.number().optional(),
+  // request
+  requestBodySnippet: z.string().optional(),
+  requestBodySnippetBytes: z.number().optional(),
+  requestBodyTruncated: z.boolean().optional(),
+  requestBodySize: z.number().optional(),
 
-    // response
-    responseHeaders: z.record(z.string(), z.string()),
-    responseBodySnippet: z.string().optional(),
-    responseBodySnippetBytes: z.number().optional(),
-    responseBodyTruncated: z.boolean().optional(),
-    responseBodySize: z.number().optional(),
-    responseContentType: z.string().optional(),
-  })
-  .strict();
+  // response
+  responseHeaders: z.record(z.string(), z.string()),
+  responseBodySnippet: z.string().optional(),
+  responseBodySnippetBytes: z.number().optional(),
+  responseBodyTruncated: z.boolean().optional(),
+  responseBodySize: z.number().optional(),
+  responseContentType: z.string().optional(),
+});
 
 export type NetworkEventPayload = z.infer<typeof NetworkEventPayloadSchema>;
 

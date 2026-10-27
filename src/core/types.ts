@@ -5,42 +5,36 @@ import { WireMessageKindSchema } from "../shared";
 import { WsEventPayloadSchema } from "../websocket";
 import { ConsoleEventPayloadSchema } from "../console";
 
-export const WireMessageBaseSchema = z
-  .object({
-    kind: WireMessageKindSchema,
-    v: z.number(),
-    channel: z.string(),
-    clientId: z.string(),
-    sessionId: z.string(),
-    deviceName: z.string().optional(),
-    platform: z.string().optional(),
-    appId: z.string().optional(),
-  })
-  .strict();
+export const WireMessageBaseSchema = z.object({
+  kind: WireMessageKindSchema,
+  v: z.number(),
+  channel: z.string(),
+  clientId: z.string(),
+  sessionId: z.string(),
+  deviceName: z.string().optional(),
+  platform: z.string().optional(),
+  appId: z.string().optional(),
+});
 
 export type WireMessageBase = z.infer<typeof WireMessageBaseSchema>;
 
 /**
  * Hello wire message - sent once after TCP connect
  */
-export const HelloAppInfoSchema = z
-  .object({
-    version: z.string().optional(),
-    build: z.string().optional(),
-    environment: z.string().optional(),
-  })
-  .strict();
+export const HelloAppInfoSchema = z.object({
+  version: z.string().optional(),
+  build: z.string().optional(),
+  environment: z.string().optional(),
+});
 
 export type HelloAppInfo = z.infer<typeof HelloAppInfoSchema>;
 
-export const HelloDeviceInfoSchema = z
-  .object({
-    os: z.string().optional(),
-    osVersion: z.string().optional(),
-    model: z.string().optional(),
-    manufacturer: z.string().optional(),
-  })
-  .strict();
+export const HelloDeviceInfoSchema = z.object({
+  os: z.string().optional(),
+  osVersion: z.string().optional(),
+  model: z.string().optional(),
+  manufacturer: z.string().optional(),
+});
 
 export type HelloDeviceInfo = z.infer<typeof HelloDeviceInfoSchema>;
 
@@ -48,11 +42,9 @@ export type HelloDeviceInfo = z.infer<typeof HelloDeviceInfoSchema>;
  * Session credentials. Sent only when the SDK got them from the cloud together with the host
  * certificate: a host that issues them understands this field and answers with `helloAck`.
  */
-export const HelloAuthSchema = z
-  .object({
-    token: z.string(),
-  })
-  .strict();
+export const HelloAuthSchema = z.object({
+  token: z.string(),
+});
 
 export type HelloAuth = z.infer<typeof HelloAuthSchema>;
 
