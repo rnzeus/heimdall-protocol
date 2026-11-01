@@ -20,7 +20,30 @@ export const HelloAckWireMessageV1Schema = z.object({
 
 export type HelloAckWireMessageV1 = z.infer<typeof HelloAckWireMessageV1Schema>;
 
-export const HostWireMessageV1Schema = z.discriminatedUnion("kind", [HelloAckWireMessageV1Schema]);
+/**
+ * Host → SDK settings, sent after an accepted `hello` and on every change; the latest one wins.
+ * A missing section means "off". Requests above the SDK's `hello.capabilities` are capped by the SDK.
+ */
+export const HostConfigFramesSchema = z.object({
+  enabled: z.boolean(),
+  fps: z.number().optional(),
+  maxWidth: z.number().optional(),
+});
+
+export type HostConfigFrames = z.infer<typeof HostConfigFramesSchema>;
+
+export const HostConfigWireMessageV1Schema = z.object({
+  kind: z.literal("hostConfig"),
+  v: z.literal(1),
+  frames: HostConfigFramesSchema.optional(),
+});
+
+export type HostConfigWireMessageV1 = z.infer<typeof HostConfigWireMessageV1Schema>;
+
+export const HostWireMessageV1Schema = z.discriminatedUnion("kind", [
+  HelloAckWireMessageV1Schema,
+  HostConfigWireMessageV1Schema,
+]);
 
 export type HostWireMessageV1 = z.infer<typeof HostWireMessageV1Schema>;
 

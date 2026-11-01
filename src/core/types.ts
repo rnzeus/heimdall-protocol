@@ -4,6 +4,11 @@ import { ZustandEventPayloadSchema } from "../zustand";
 import { WireMessageKindSchema } from "../shared";
 import { WsEventPayloadSchema } from "../websocket";
 import { ConsoleEventPayloadSchema } from "../console";
+import {
+  FramesCapabilitySchema,
+  FramesStatusEventPayloadSchema,
+  ScreenFrameEventPayloadSchema,
+} from "../frames";
 
 export const WireMessageBaseSchema = z.object({
   kind: WireMessageKindSchema,
@@ -48,6 +53,13 @@ export const HelloAuthSchema = z.object({
 
 export type HelloAuth = z.infer<typeof HelloAuthSchema>;
 
+/** Optional features the SDK supports; a host enables them with `hostConfig`. */
+export const HelloCapabilitiesSchema = z.object({
+  frames: FramesCapabilitySchema.optional(),
+});
+
+export type HelloCapabilities = z.infer<typeof HelloCapabilitiesSchema>;
+
 export const HelloWireMessageV1Schema = WireMessageBaseSchema.extend({
   kind: z.literal("hello"),
   v: z.literal(1),
@@ -55,6 +67,7 @@ export const HelloWireMessageV1Schema = WireMessageBaseSchema.extend({
   app: HelloAppInfoSchema.optional(),
   device: HelloDeviceInfoSchema.optional(),
   auth: HelloAuthSchema.optional(),
+  capabilities: HelloCapabilitiesSchema.optional(),
 });
 
 export type HelloWireMessageV1 = z.infer<typeof HelloWireMessageV1Schema>;
@@ -68,6 +81,8 @@ export const EventWirePayloadSchema = z.union([
   ZustandEventPayloadSchema,
   WsEventPayloadSchema,
   ConsoleEventPayloadSchema,
+  ScreenFrameEventPayloadSchema,
+  FramesStatusEventPayloadSchema,
 ]);
 
 export type EventWirePayload = z.infer<typeof EventWirePayloadSchema>;

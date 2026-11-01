@@ -33,6 +33,14 @@ describe("hello", () => {
   it("rejects other wire versions", () => {
     expect(safeParseWireMessageV1({ ...hello, v: 2 }).success).toBe(false);
   });
+
+  it("accepts frames capabilities and strips unknown ones", () => {
+    const result = safeParseWireMessageV1({
+      ...hello,
+      capabilities: { frames: { maxFps: 2, maxWidth: 480 }, inspector: {} },
+    });
+    expect(result.data).toEqual({ ...hello, capabilities: { frames: { maxFps: 2, maxWidth: 480 } } });
+  });
 });
 
 describe("envelope", () => {

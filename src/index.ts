@@ -5,3 +5,4 @@ export * from "./shared";
 export * from "./websocket";
 export * from "./console";
 export * from "./host";
+export * from "./frames";

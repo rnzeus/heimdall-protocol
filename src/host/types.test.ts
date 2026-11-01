@@ -26,6 +26,22 @@ describe("helloAck", () => {
     expect(safeParseHostWireMessageV1({ kind: "helloAck", v: 1, status: "pending" }).success).toBe(false);
   });
 
+  it("accepts a hostConfig with frames", () => {
+    const config = { kind: "hostConfig", v: 1, frames: { enabled: true, fps: 1, maxWidth: 480 } };
+    expect(safeParseHostWireMessageV1(config).data).toEqual(config);
+  });
+
+  it("accepts a hostConfig without sections and strips unknown ones", () => {
+    expect(safeParseHostWireMessageV1({ kind: "hostConfig", v: 1, inspector: {} }).data).toEqual({
+      kind: "hostConfig",
+      v: 1,
+    });
+  });
+
+  it("rejects frames without enabled", () => {
+    expect(safeParseHostWireMessageV1({ kind: "hostConfig", v: 1, frames: { fps: 1 } }).success).toBe(false);
+  });
+
   it("rejects other kinds and versions", () => {
     expect(safeParseHostWireMessageV1({ kind: "hello", v: 1, status: "accepted" }).success).toBe(false);
     expect(safeParseHostWireMessageV1({ kind: "helloAck", v: 2, status: "accepted" }).success).toBe(false);
