@@ -8,6 +8,7 @@ import {
   FramesCapabilitySchema,
   FramesStatusEventPayloadSchema,
   ScreenFrameEventPayloadSchema,
+  ScreenTapEventPayloadSchema,
 } from "../frames";
 
 export const WireMessageBaseSchema = z.object({
@@ -83,6 +84,7 @@ export const EventWirePayloadSchema = z.union([
   ConsoleEventPayloadSchema,
   ScreenFrameEventPayloadSchema,
   FramesStatusEventPayloadSchema,
+  ScreenTapEventPayloadSchema,
 ]);
 
 export type EventWirePayload = z.infer<typeof EventWirePayloadSchema>;

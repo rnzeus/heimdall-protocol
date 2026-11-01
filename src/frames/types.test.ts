@@ -50,3 +50,27 @@ describe("framesStatus", () => {
     expect(safeParseWireMessageV1({ ...envelope, event: { ...status, state: "stopped" } }).success).toBe(false);
   });
 });
+
+describe("screenTap", () => {
+  const tap = { type: "screenTap", id: "t1", ts: 1, x: 0.5, y: 0.25 };
+
+  it("accepts a tap", () => {
+    expect(safeParseWireMessageV1({ ...envelope, event: tap }).data).toEqual({ ...envelope, event: tap });
+  });
+
+  it("keeps a long press and drops a kind it does not know", () => {
+    expect(safeParseWireMessageV1({ ...envelope, event: { ...tap, kind: "longPress" } }).data).toEqual({
+      ...envelope,
+      event: { ...tap, kind: "longPress" },
+    });
+    expect(safeParseWireMessageV1({ ...envelope, event: { ...tap, kind: "pinch" } }).data).toEqual({
+      ...envelope,
+      event: { ...tap, kind: undefined },
+    });
+  });
+
+  it("rejects a tap without a position", () => {
+    const { y: _y, ...withoutY } = tap;
+    expect(safeParseWireMessageV1({ ...envelope, event: withoutY }).success).toBe(false);
+  });
+});

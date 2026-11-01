@@ -17,6 +17,25 @@ export const ScreenFrameEventPayloadSchema = z.object({
 
 export type ScreenFrameEventPayload = z.infer<typeof ScreenFrameEventPayloadSchema>;
 
+export const ScreenTapKindSchema = z.enum(["tap", "longPress"]);
+export type ScreenTapKind = z.infer<typeof ScreenTapKindSchema>;
+
+/**
+ * A tap on the screen while frames are captured — a finger down and up without moving; scrolls are not sent.
+ * Where it went down, in shares of the captured area (0…1 from the top left), so it lands on the frame whatever
+ * its size. `ts` is when it went down, on the device clock like frames. An unknown kind parses as `undefined`.
+ */
+export const ScreenTapEventPayloadSchema = z.object({
+  type: z.literal("screenTap"),
+  id: z.string(),
+  ts: z.number(),
+  x: z.number(),
+  y: z.number(),
+  kind: ScreenTapKindSchema.optional().catch(undefined),
+});
+
+export type ScreenTapEventPayload = z.infer<typeof ScreenTapEventPayloadSchema>;
+
 export const FramesStateSchema = z.enum(["running", "paused"]);
 export type FramesState = z.infer<typeof FramesStateSchema>;
 
