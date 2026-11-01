@@ -40,9 +40,22 @@ export const HostConfigWireMessageV1Schema = z.object({
 
 export type HostConfigWireMessageV1 = z.infer<typeof HostConfigWireMessageV1Schema>;
 
+/**
+ * Host → SDK: take a frame of the screen as it is now, for a bug report opened at this moment. Sent only to an
+ * SDK that announced `capabilities.frames`; the frame comes back as a usual `screenFrame`, also while frames
+ * are off — then as a one-off.
+ */
+export const CaptureScreenWireMessageV1Schema = z.object({
+  kind: z.literal("captureScreen"),
+  v: z.literal(1),
+});
+
+export type CaptureScreenWireMessageV1 = z.infer<typeof CaptureScreenWireMessageV1Schema>;
+
 export const HostWireMessageV1Schema = z.discriminatedUnion("kind", [
   HelloAckWireMessageV1Schema,
   HostConfigWireMessageV1Schema,
+  CaptureScreenWireMessageV1Schema,
 ]);
 
 export type HostWireMessageV1 = z.infer<typeof HostWireMessageV1Schema>;

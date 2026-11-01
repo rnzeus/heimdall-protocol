@@ -1,8 +1,16 @@
 import { z } from "zod";
 
 /**
- * One screenshot of the app window, sent while the host asks for frames (`hostConfig.frames`).
- * The SDK skips frames identical to the previous one, so the gap between two frames can be long.
+ * How a frame was taken: `system` — the screen as the device composes it, what the tester sees (Android
+ * PixelCopy, iOS ReplayKit); `snapshot` — the app's views drawn by the SDK, where forms, video and maps
+ * may come out blank (iOS without screen recording). An unknown value parses as `undefined`.
+ */
+export const FrameSourceSchema = z.enum(["system", "snapshot"]);
+export type FrameSource = z.infer<typeof FrameSourceSchema>;
+
+/**
+ * One screenshot of the app window, sent while the host asks for frames (`hostConfig.frames`) or once on
+ * `captureScreen`. The SDK skips frames identical to the previous one, so the gap between two frames can be long.
  */
 export const ScreenFrameEventPayloadSchema = z.object({
   type: z.literal("screenFrame"),
@@ -13,6 +21,7 @@ export const ScreenFrameEventPayloadSchema = z.object({
   mime: z.enum(["image/jpeg"]),
   /** base64 */
   data: z.string(),
+  source: FrameSourceSchema.optional().catch(undefined),
 });
 
 export type ScreenFrameEventPayload = z.infer<typeof ScreenFrameEventPayloadSchema>;
@@ -39,7 +48,16 @@ export type ScreenTapEventPayload = z.infer<typeof ScreenTapEventPayloadSchema>;
 export const FramesStateSchema = z.enum(["running", "paused"]);
 export type FramesState = z.infer<typeof FramesStateSchema>;
 
-export const FramesPauseReasonSchema = z.enum(["slow_device", "background"]);
+/**
+ * `recording_declined` — the tester declined the system's screen recording prompt (iOS asks again only after
+ * the app restarts); `recording_off` — the tester turned screen recording off on the device.
+ */
+export const FramesPauseReasonSchema = z.enum([
+  "slow_device",
+  "background",
+  "recording_declined",
+  "recording_off",
+]);
 export type FramesPauseReason = z.infer<typeof FramesPauseReasonSchema>;
 
 export const FramesDeviceClassSchema = z.enum(["low", "normal"]);
@@ -58,6 +76,8 @@ export const FramesStatusEventPayloadSchema = z.object({
   /** current rate, lowered by the SDK on a slow device */
   fps: z.number(),
   deviceClass: FramesDeviceClassSchema.optional().catch(undefined),
+  /** how frames are taken now */
+  source: FrameSourceSchema.optional().catch(undefined),
 });
 
 export type FramesStatusEventPayload = z.infer<typeof FramesStatusEventPayloadSchema>;

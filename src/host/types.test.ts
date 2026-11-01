@@ -42,6 +42,13 @@ describe("helloAck", () => {
     expect(safeParseHostWireMessageV1({ kind: "hostConfig", v: 1, frames: { fps: 1 } }).success).toBe(false);
   });
 
+  it("accepts captureScreen and strips fields from a newer host", () => {
+    expect(safeParseHostWireMessageV1({ kind: "captureScreen", v: 1, quality: "high" }).data).toEqual({
+      kind: "captureScreen",
+      v: 1,
+    });
+  });
+
   it("rejects other kinds and versions", () => {
     expect(safeParseHostWireMessageV1({ kind: "hello", v: 1, status: "accepted" }).success).toBe(false);
     expect(safeParseHostWireMessageV1({ kind: "helloAck", v: 2, status: "accepted" }).success).toBe(false);

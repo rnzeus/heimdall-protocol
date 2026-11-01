@@ -36,6 +36,19 @@ describe("screenFrame", () => {
   });
 });
 
+describe("frame source", () => {
+  it("keeps a known source and drops one it does not know", () => {
+    expect(safeParseWireMessageV1({ ...envelope, event: { ...frame, source: "snapshot" } }).data).toEqual({
+      ...envelope,
+      event: { ...frame, source: "snapshot" },
+    });
+    expect(safeParseWireMessageV1({ ...envelope, event: { ...frame, source: "camera" } }).data).toEqual({
+      ...envelope,
+      event: { ...frame, source: undefined },
+    });
+  });
+});
+
 describe("framesStatus", () => {
   it("accepts a status", () => {
     expect(safeParseWireMessageV1({ ...envelope, event: status }).data).toEqual({ ...envelope, event: status });
@@ -44,6 +57,13 @@ describe("framesStatus", () => {
   it("drops a reason and a device class it does not know", () => {
     const result = safeParseWireMessageV1({ ...envelope, event: { ...status, reason: "thermal", deviceClass: "tv" } });
     expect(result.data).toEqual({ ...envelope, event: { ...status, reason: undefined, deviceClass: undefined } });
+  });
+
+  it("accepts the recording reasons and the source", () => {
+    for (const reason of ["recording_declined", "recording_off"]) {
+      const event = { ...status, reason, source: "system" };
+      expect(safeParseWireMessageV1({ ...envelope, event }).data).toEqual({ ...envelope, event });
+    }
   });
 
   it("rejects an unknown state", () => {
