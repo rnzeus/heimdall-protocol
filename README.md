@@ -62,6 +62,16 @@ if (result.success) {
 - An unknown `kind` or event `type` is rejected; `safeParseWireEnvelope` tells such a message apart from garbage.
 - Changes are additive only. A new field is released in the protocol first, then in the host, then in the SDK.
 
+## Heimdall ecosystem
+
+| | |
+|---|---|
+| [Heimdall desktop](https://heimdall.rnzeus.dev/download) | the inspector for macOS and Windows |
+| [`@rnzeus/heimdall-sdk`](https://github.com/rnzeus/heimdall-sdk) | React Native client: network, WebSocket, state, console |
+| [`@rnzeus/heimdall-lens`](https://github.com/rnzeus/heimdall-lens) | native screenshots and taps for bug reports |
+| [`@rnzeus/heimdall-protocol`](https://github.com/rnzeus/heimdall-protocol) | messages between the SDK and the desktop app |
+| [`@rnzeus/heimdall-trackers`](https://github.com/rnzeus/heimdall-trackers) | issue tracker adapters for bug reports |
+
 ## License
 
 MIT
