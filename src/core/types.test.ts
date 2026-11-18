@@ -41,6 +41,16 @@ describe("hello", () => {
     });
     expect(result.data).toEqual({ ...hello, capabilities: { frames: { maxFps: 2, maxWidth: 480 } } });
   });
+
+  it("accepts an app key and a policy, keeping an unknown ai value for the host to read", () => {
+    const message = { ...hello, app: { version: "1.0", key: "hk_abc" }, policy: { ai: "later" } };
+    expect(safeParseWireMessageV1(message).data).toEqual(message);
+  });
+
+  it("rejects a policy without ai and an oversized key", () => {
+    expect(safeParseWireMessageV1({ ...hello, policy: {} }).success).toBe(false);
+    expect(safeParseWireMessageV1({ ...hello, app: { key: "k".repeat(129) } }).success).toBe(false);
+  });
 });
 
 describe("envelope", () => {

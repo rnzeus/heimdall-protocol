@@ -21,6 +21,8 @@ Every message is one JSON object. There are two kinds:
 
 `hello` may carry `auth: { token }` — session credentials the SDK got from the cloud along with the host certificate. Only a host that issued them receives this field.
 
+`hello.app.key` — the public app key from Heimdall cloud; the host uses it to find the team the app belongs to. `hello.policy: { ai }` — what the app's developers allow AI to get from its data: `"strict"` or `"off"`. It can only make the host stricter; a host treats an unknown value as `"strict"`.
+
 The host answers `hello` with one message:
 
 | Kind | When | Schema |

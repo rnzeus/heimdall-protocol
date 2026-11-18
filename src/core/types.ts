@@ -31,6 +31,8 @@ export const HelloAppInfoSchema = z.object({
   version: z.string().optional(),
   build: z.string().optional(),
   environment: z.string().optional(),
+  /** Public app key from Heimdall cloud: ties the app to a team. Not a secret. */
+  key: z.string().max(128).optional(),
 });
 
 export type HelloAppInfo = z.infer<typeof HelloAppInfoSchema>;
@@ -61,6 +63,16 @@ export const HelloCapabilitiesSchema = z.object({
 
 export type HelloCapabilities = z.infer<typeof HelloCapabilitiesSchema>;
 
+/**
+ * What the app's developers allow for its data. It can only make the host stricter, never looser.
+ * `ai`: "strict" | "off"; a host treats an unknown value as "strict". No `policy` — no limits from the app.
+ */
+export const HelloPolicySchema = z.object({
+  ai: z.string().max(32),
+});
+
+export type HelloPolicy = z.infer<typeof HelloPolicySchema>;
+
 export const HelloWireMessageV1Schema = WireMessageBaseSchema.extend({
   kind: z.literal("hello"),
   v: z.literal(1),
@@ -69,6 +81,7 @@ export const HelloWireMessageV1Schema = WireMessageBaseSchema.extend({
   device: HelloDeviceInfoSchema.optional(),
   auth: HelloAuthSchema.optional(),
   capabilities: HelloCapabilitiesSchema.optional(),
+  policy: HelloPolicySchema.optional(),
 });
 
 export type HelloWireMessageV1 = z.infer<typeof HelloWireMessageV1Schema>;
